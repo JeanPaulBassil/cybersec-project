@@ -1,0 +1,11 @@
+FROM mysql:8.0
+
+# Environment variables for MySQL
+ENV MYSQL_ROOT_PASSWORD=password
+ENV MYSQL_DATABASE=security_demo
+
+# Copy initialization SQL script
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Expose MySQL port
+EXPOSE 3306 
