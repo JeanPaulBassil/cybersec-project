@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   mysql:
@@ -13,9 +13,9 @@ services:
   webapp:
     build:
       context: .
-      dockerfile: Dockerfile.app
+      dockerfile: Dockerfile.vulnerable
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       - mysql
     networks:

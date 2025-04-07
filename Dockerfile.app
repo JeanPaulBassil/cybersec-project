@@ -6,8 +6,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app.py .
+# Dynamically copy based on SECURE_VERSION
+ARG SECURE_VERSION=false
+
+# Set default to vulnerable unless SECURE_VERSION is true
+COPY app_vulnerable.py app.py
+RUN if [ "$SECURE_VERSION" = "true" ]; then cp app.py app.secure.py && cp app.secure.py app.py; fi
+
 
 # Environment variables
 ENV DB_HOST=mysql

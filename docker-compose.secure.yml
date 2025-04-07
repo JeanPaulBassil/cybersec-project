@@ -13,9 +13,9 @@ services:
   webapp:
     build:
       context: .
-      dockerfile: Dockerfile.app
+      dockerfile: Dockerfile.secure
     ports:
-      - "8081:8080"  # Using a different port for the secure version
+      - '8081:8080' # Using a different port for the secure version
     depends_on:
       - mysql
     networks:
@@ -28,4 +28,4 @@ networks:
     driver: bridge
 
 volumes:
-  mysql-data: 
+  mysql-data:

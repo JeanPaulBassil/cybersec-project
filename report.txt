@@ -1,0 +1,64 @@
+SQL Injection Demonstration Project Report
+Students: Peter Chahid, Jean-Paul Bassil
+Course: CSC435 - Computer Security
+Tools Used: Docker, Flask, MySQL, Python, SQL, Bash
+
+Project Overview:
+This project demonstrates how SQL injection vulnerabilities can be exploited in a web application and how they can be mitigated using secure coding practices. It includes two versions of the same login-based web app:
+1.	Vulnerable App (port 8080): Uses unsafe SQL queries with string interpolation.
+2.	Secure App (port 8081): Uses parameterized queries to safely handle user inputs.
+Both versions share the same backend structure and use a MySQL database with two tables:
+•	user_data: Stores user details like userid, firstname, lastname, ssn, and history.
+•	user_auth: Stores login credentials (username, pass) and links to user_data.
+
+Application Functionality:
+Each app exposes a simple login form that asks for a username and password. On valid credentials, the system displays the user’s information (including their userid, ssn, and more). The vulnerable app is intentionally coded to allow SQL injection attacks, while the secure app uses defensive techniques to prevent those attacks.
+
+How to Run the Applications:
+1.	Make sure Docker and Docker Compose are installed on your machine.
+2.	Clone the project folder and navigate into it.
+3.	Use one terminal for the vulnerable app:
+o	Build: docker compose -p vulnerable_app -f docker-compose.yml build
+o	Run: docker compose -p vulnerable_app -f docker-compose.yml up
+o	Access it at http://localhost:8080
+4.	Use a second terminal for the secure app:
+o	Build: docker compose -p secure_app -f docker-compose.secure.yml build
+o	Run: docker compose -p secure_app -f docker-compose.secure.yml up
+o	Access it at http://localhost:8081
+5.	You can run automated tests with:
+o	python3 test_sql_injection.py
+
+Sample Users Available in the Database:
+•	johnd / password123
+•	janes / smith2022
+•	admin / admin123
+•	bobj / support2023
+
+SQL Injection Tests (Manual via UI and Automated Script):
+A variety of SQL injection payloads were tested manually through the UI and automatically through a custom test script (test_sql_injection.py), targeting both vulnerable and secure apps.
+Manual Input Example:
+•	Username: admin' --
+•	Password: (left empty)
+Vulnerable App Result: Logged in successfully as admin.
+Secure App Result: Rejected with "Invalid username or password".
+Other tested payloads included:
+•	admin'#
+•	' OR '1'='1
+•	' UNION SELECT 1,2,3,4,5 --
+Each one worked on the vulnerable app, and failed (was blocked) on the secure app — as expected.
+
+Script Output Highlights:
+•	On the vulnerable app, SQL injections were successful:
+o	Authentication was bypassed.
+o	All users were returned via ' OR '1'='1.
+o	Fake data was injected with UNION SELECT.
+•	On the secure app, all attacks were blocked.
+o	Only real, valid logins were accepted.
+o	Error messages remained consistent.
+o	The application used parameterized queries (%s) that escaped malicious input.
+
+Conclusion:
+This project provided hands-on experience with SQL injection, one of the most well-known vulnerabilities in web security. It clearly illustrated the risk of unparameterized SQL queries and the power of secure coding practices like prepared statements. The use of Docker containers allowed both apps to be run in parallel, and the automated testing script ensured that the security mechanisms worked reliably.
+Screenshots of the vulnerable and secure app interfaces, successful injections, blocked attacks, and test results were collected to document the outcomes.
+The project demonstrates a clear contrast between an insecure system and one hardened against SQL injection.
+
